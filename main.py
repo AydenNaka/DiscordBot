@@ -22,11 +22,13 @@ async def on_ready():
 @bot.tree.command(name="confess", description="send anonymous confession")
 @app_commands.describe(text="confession here")
 async def confess(interaction: discord.Interaction, text: str):
-    confession = bot.get_channel(config.confession)
-    if not confession:
+    confessionChannel = bot.get_channel(config.confession)
+    print(config.confession)
+    if not confessionChannel:
         await interaction.response.send_message("wrong channel", ephemeral=True)
         return
 
-    await confession.send(f"confession\n{text}")
+    await confessionChannel.send(f"**confession**\n{text}")
+    await interaction.followup.send("sent", ephemeral=True)
 
 bot.run(bottoken.token)

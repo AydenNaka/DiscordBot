@@ -1,15 +1,11 @@
 import discord
 from discord import app_commands
 from discord.ext import commands
-
 import config
-import sys
-import os
 
+import sys, os
 sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-
 import bottoken
-print(bottoken.token)
 
 intents = discord.Intents.default()
 bot = commands.Bot(command_prefix="!", intents=intents)

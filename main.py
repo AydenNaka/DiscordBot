@@ -2,6 +2,7 @@ import discord
 from discord import app_commands
 from discord.ext import commands
 
+import config
 import sys
 import os
 
@@ -25,11 +26,11 @@ async def on_ready():
 @bot.tree.command(name="confess", description="send anonymous confession")
 @app_commands.describe(text="confession here")
 async def confess(interaction: discord.Interaction, text: str):
-    confession_channel = bot.get_channel(config.CONFESSION_CHANNEL_ID)
-    if not confession_channel:
-        await interaction.response.send_message("message cannot be blank", ephemeral=True)
+    confession = bot.get_channel(config.confession)
+    if not confession:
+        await interaction.response.send_message("wrong channel", ephemeral=True)
         return
 
-    await confession_channel.send(f"confession\n{text}")
+    await confession.send(f"confession\n{text}")
 
 bot.run(bottoken.token)

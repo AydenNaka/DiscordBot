@@ -23,7 +23,7 @@ async def on_ready():
 @app_commands.describe(text="confession here")
 async def confess(interaction: discord.Interaction, text: str):
     confessionChannel = bot.get_channel(config.confession)
-    print(config.confession)
+    await interaction.response.defer(ephemeral=True)
     if not confessionChannel:
         await interaction.response.send_message("wrong channel", ephemeral=True)
         return

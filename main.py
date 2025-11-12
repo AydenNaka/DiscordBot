@@ -11,9 +11,7 @@ from discord import app_commands
 from discord.ext import commands
 import config
 
-import sys, os
-sys.path.append(os.path.dirname(os.path.dirname(__file__)))
-import bottoken
+from bottoken import token
 
 intents = discord.Intents.default()
 intents.message_content = True
@@ -39,8 +37,8 @@ async def on_message(message):
     if date.fromisoformat(active["purge"]["enddate"]) > date.today():
         with open(userdata, "r") as file:
             userlist = json.load(file)
-        if str(message.author) not in userlist:
-            userlist[str(message.author)] = {
+        if str(message.author.id) not in userlist:
+            userlist[str(message.author.id)] = {
                 "purgelives": 0,
                 "badletters": 0,
                 "fineletters": 0
@@ -48,8 +46,8 @@ async def on_message(message):
         content = message.content.lower()
         badletters = content.count(active["purge"]["letter"])
         fineletters = len(content) - badletters
-        userlist[str(message.author)]["badletters"] = badletters
-        userlist[str(message.author)]["fineletters"] = fineletters
+        userlist[str(message.author.id)]["badletters"] = badletters
+        userlist[str(message.author.id)]["fineletters"] = fineletters
         with open(userdata, "w") as file:
             json.dump(userlist, file, indent=4)
         if badletters > 0:
@@ -79,7 +77,7 @@ async def purge(interaction: discord.Interaction):
             eventtemp = json.load(file)
         eventtemp["purge"]["letter"] = letters[random.randint(0, len(letters) - 1)]
         eventtemp["purge"]["enddate"] = (date.today() + timedelta(days=1)).isoformat()
-        with open(eventtemp, "w") as file:
+        with open(eventdata, "w") as file:
             json.dump(eventtemp, file, indent=4)
         
         # Clear Past User Data
@@ -91,9 +89,6 @@ async def purge(interaction: discord.Interaction):
         with open(userdata, "w") as file:
             json.dump(usertemp, file, indent=4)
 
-        await interaction.response.send_message(
-            f"# The letter {eventtemp['purge']['letter'].upper()} is banned for the next 24 hours",
-            ephemeral=True
-        )
+        await interaction.response.send_message(f"# The letter {eventtemp['purge']['letter'].upper()} is banned for the next 24 hours")
 
-bot.run(bottoken.token)
+bot.run(token)

@@ -76,23 +76,23 @@ async def purge(interaction: discord.Interaction):
         # Generate New Letter
         letters = "abcdefghijklmnopqrstuvwxyz"
         with open(eventdata, "r") as file:
-            tempdata = json.load(file)
-        tempdata["purge"]["letter"] = letters[random.randint(0, len(letters) - 1)]
-        tempdata["purge"]["enddate"] = (date.today() + timedelta(days=1)).isoformat()
-        with open(eventdata, "w") as file:
-            json.dump(tempdata, file, indent=4)
+            eventtemp = json.load(file)
+        eventtemp["purge"]["letter"] = letters[random.randint(0, len(letters) - 1)]
+        eventtemp["purge"]["enddate"] = (date.today() + timedelta(days=1)).isoformat()
+        with open(eventtemp, "w") as file:
+            json.dump(eventtemp, file, indent=4)
         
         # Clear Past User Data
         with open(userdata, "r") as file:
-            tempdata = json.load(file)
-        for key in tempdata:
-            tempdata[key]["badletters"] = 0
-            tempdata[key]["fineletters"] = 0
+            usertemp = json.load(file)
+        for key in usertemp:
+            usertemp[key]["badletters"] = 0
+            usertemp[key]["fineletters"] = 0
         with open(userdata, "w") as file:
-            json.dump(tempdata, file, indent=4)
+            json.dump(usertemp, file, indent=4)
 
         await interaction.response.send_message(
-            f"# The letter {tempdata['purge']['letter'].upper()} is banned for the next 24 hours",
+            f"# The letter {eventtemp['purge']['letter'].upper()} is banned for the next 24 hours",
             ephemeral=True
         )
 

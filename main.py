@@ -32,6 +32,11 @@ async def on_message(message):
     if message.author == bot.user:
         return
     
+    if message.author.id in config.blocked:
+        await message.delete()
+        await message.channel.send("This user is not allowed to send messsages in this server.")
+        return
+    
     with open(eventdata, "r") as file:
         active = json.load(file)
     if date.fromisoformat(active["purge"]["enddate"]) > date.today():

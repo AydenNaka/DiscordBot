@@ -68,6 +68,8 @@ async def confess(interaction: discord.Interaction, text: str):
     if not confessionChannel:
         await interaction.response.send_message("wrong channel", ephemeral=True)
         return
+    if message.author.id in config.users:
+        return
 
     await confessionChannel.send(f"**confession**\n{text}")
     await interaction.followup.send("sent", ephemeral=True)
